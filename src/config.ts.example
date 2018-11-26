@@ -1,0 +1,44 @@
+class Config {
+    /* The token of the bot */
+    token: string = 'your token here';
+
+    /* The prefix uses with commands, for example $megatip */
+    prefix: string = '$';
+
+    /* The command used to tip someone */
+    tipCommand: string = '~tip';
+
+    /* Max amount of 20 people in a tip */
+    maxTippers: number = 20;
+
+    /* The amount to tip, spread between multiple people */
+    tipAmount: number = 300;
+
+    /* How often should we send tips, in seconds */
+    tipFrequency: number = 60 * 30;
+
+    /* The channels to check messages for in, and to tip in */
+    tipChannels: string[] = [
+        '458450839003201567',
+        '461787066510868481',
+        '462698368716636172',
+        '464158848039649300'
+    ];
+
+    /* The amount of decimal places your coin has */
+    decimals: number = 2;
+
+    /* The emoji to use when a non mod tries to use dotip or megatip */
+    prohibitedEmoji: string = 'ban';
+
+    /* ID's of people who can call dotip and megatip */
+    mods: string[] = [
+        '354701063955152898',
+        '431654339359277067'
+    ];
+
+    /* The URL to get our balance from */
+    balanceURL: string = 'http://monkeybot.krruzic.xyz/balance?pid=AE40FC968457E20F171ABC4712D2DF78E7D572C2B49E799BE4CDE0FD5DE77D51';
+}
+
+module.exports = new Config();

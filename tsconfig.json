@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "noEmit": true,
+        "target": "es6",
+        "module": "commonjs",
+        "noImplicitAny": false,
+        "sourceMap": true,
+        "preserveConstEnums": true,
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "downlevelIteration": true,
+        "lib": ["esnext", "dom"],
+        "allowSyntheticDefaultImports": true,
+        "typeRoots": ["node_modules/@types"],
+        "baseUrl": ".",
+        "paths": {
+            "src/*": ["src/*"],
+        }
+    },
+    "exclude": ["node_modules"],
+    "compileOnSave": true,
+}
