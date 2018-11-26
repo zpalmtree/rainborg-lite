@@ -48,7 +48,8 @@ client.on('message', msg => {
 launch();
 
 function balance(msg) : void {
-    request({uri: config.balanceURL, timeout: 3 * 1000}, function(error, response, body) {
+    /* 10 second timeout */
+    request({uri: config.balanceURL, timeout: 10 * 1000}, function(error, response, body) {
         if (error) {
             console.error(error);
             msg.reply('Failed to get balance - possibly API is down?');
@@ -66,7 +67,7 @@ function balance(msg) : void {
 function megatip(msg) : void {
     if (config.mods.includes(msg.author.id)) {
         /* Remove the command to get out the amount */
-        var megaTipStr = msg.content.replace(config.prefix + 'megatip', '');
+        const megaTipStr = msg.content.replace(config.prefix + 'megatip', '');
 
         /* Check it's a number */
         if (isNaN(megaTipStr)) {
@@ -75,7 +76,7 @@ function megatip(msg) : void {
         }
 
         /* Parse as a number */
-        var megaTipAmount = Number(megaTipStr);
+        var megaTipAmount: number = Number(megaTipStr);
 
         if (megaTipAmount <= 0) {
             msg.reply('Megatip amount cannot be <= zero...');
@@ -116,7 +117,7 @@ function addToTipPool(channelID: string, userID: string) : void {
     }
 
     /* See if the user is already in the array */
-    var index = channelPool.indexOf(userID);
+    const index: number = channelPool.indexOf(userID);
 
     /* Item is the channel pool, remove it */
     if (index > -1) {
@@ -131,13 +132,14 @@ function addToTipPool(channelID: string, userID: string) : void {
     /* Finally add the new item onto the channel pool */
     channelPool.push(userID);
 
-    /* And update the value in state */
+    /* And update the stored pools */
     tipPools.set(channelID, channelPool);
 }
 
 function doTip(amount: number) : boolean {
     var validChannels: any[] = [];
 
+    /* Find any channels which have users in */
     for (var [channelID, users] of tipPools) {
         if (users.length > 0) {
             validChannels.push({'channelID': channelID, 'users': users});
@@ -163,7 +165,7 @@ function doTip(amount: number) : boolean {
 
     /* Take the amount, divide by the amount of users we're sending to, and
        round to the correct amount of decimal places for the coin */
-    var tipAmount = (amount / chosenItem.users.length).toFixed(config.decimals);
+    const tipAmount: string = (amount / chosenItem.users.length).toFixed(config.decimals);
 
     /* Build the tip message */
     var message: string = `${config.tipCommand} ${tipAmount}`
