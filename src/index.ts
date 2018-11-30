@@ -18,11 +18,9 @@ client.on('message', msg => {
         return;
     }
 
-    if (config.tipChannels.includes(msg.channel.id)) {
-        console.log(`Adding ${msg.author.username} to the tip pool...`);
-        addToTipPool(msg.channel.id, msg.author.id);
-    }
-
+    /* Add the user to the pool, if a valid channel and not blacklisted text */
+    addToTipPool(msg);
+    
     if (msg.content === config.prefix + 'balance') {
         balance(msg);
         return;
@@ -107,17 +105,32 @@ function addReaction(emoji: string, message) : void {
     message.react(reaction).catch(console.error);
 }
 
-function addToTipPool(channelID: string, userID: string) : void {
-    var channelPool = tipPools.get(channelID);
+function addToTipPool(msg) : void {
+    if (!config.tipChannels.includes(msg.channel.id)) {
+        console.log('Message in non tip channel, ignoring...');
+        return;
+    }
+
+    for (var bannedPhrase of config.wordBlacklist) {
+        if (msg.content.toLowerCase().includes(bannedPhrase)) {
+            console.log(`Ignoring message (${msg.content}) containing banned ` +
+                        `phrase: ${bannedPhrase}`);
+            return;
+        }
+    }
+
+    console.log(`Adding ${msg.author.username} to the tip pool...`);
+
+    var channelPool = tipPools.get(msg.channel.id);
 
     /* Doesn't exist, add this entry and return */
     if (!channelPool) {
-        tipPools.set(channelID, [userID]);
+        tipPools.set(msg.channel.id, [msg.author.id]);
         return;
     }
 
     /* See if the user is already in the array */
-    const index: number = channelPool.indexOf(userID);
+    const index: number = channelPool.indexOf(msg.author.id);
 
     /* Item is the channel pool, remove it */
     if (index > -1) {
@@ -130,10 +143,10 @@ function addToTipPool(channelID: string, userID: string) : void {
     }
 
     /* Finally add the new item onto the channel pool */
-    channelPool.push(userID);
+    channelPool.push(msg.author.id);
 
     /* And update the stored pools */
-    tipPools.set(channelID, channelPool);
+    tipPools.set(msg.channel.id, channelPool);
 }
 
 function doTip(amount: number) : boolean {
@@ -179,8 +192,8 @@ function doTip(amount: number) : boolean {
 
     channel.send(message);
 
-    /* Empty the tip pool that we just used */
-    tipPools.set(chosenItem.channelID, []);
+    /* Empty the tip pools */
+    tipPools = new Map();
 
     return true;
 }

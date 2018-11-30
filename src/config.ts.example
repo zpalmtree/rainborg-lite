@@ -20,9 +20,6 @@ class Config {
     /* The channels to check messages for in, and to tip in */
     tipChannels: string[] = [
         '458450839003201567',
-        '461787066510868481',
-        '462698368716636172',
-        '464158848039649300'
     ];
 
     /* The amount of decimal places your coin has */
@@ -39,6 +36,11 @@ class Config {
 
     /* The URL to get our balance from */
     balanceURL: string = 'http://monkeybot.krruzic.xyz/balance?pid=AE40FC968457E20F171ABC4712D2DF78E7D572C2B49E799BE4CDE0FD5DE77D51';
+
+    wordBlacklist: string[] = [
+        'thanks',
+        'tip'
+    ];
 }
 
 module.exports = new Config();
