@@ -47,17 +47,17 @@ launch();
 
 function balance(msg) : void {
     /* 10 second timeout */
-    request({uri: config.balanceURL, timeout: 10 * 1000}, function(error, response, body) {
+    request({uri: config.balanceURL, json: true, timeout: 10 * 1000}, function(error, response, body) {
         if (error) {
             console.error(error);
-            msg.reply('Failed to get balance - possibly API is down?');
+            msg.reply('Failed to get balance - possibly API is down? (Timeout)');
             return;
         }
 
         if (body !== undefined && body.balance !== undefined) {
             msg.reply(`Balance: ${body.balance}`);
         } else {
-            msg.reply('Failed to get balance - possibly API is down?');
+            msg.reply('Failed to get balance - bad response from API (' + body + ')');
         }
     });
 }
